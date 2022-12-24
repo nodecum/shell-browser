@@ -1,0 +1,1 @@
+add_subdirectory_ifdef(CONFIG_SHELL_BROWSER shell_browser)

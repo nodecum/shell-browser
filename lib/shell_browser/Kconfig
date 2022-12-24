@@ -1,0 +1,24 @@
+
+config SHELL_BROWSER
+       bool "shell_browser Support"
+       help
+         This option enables the shell_browser library
+
+config SHELL_BROWSER_STACK_SIZE
+       int "Shell Browser stack size"
+       depends on SHELL_BROWSER
+       default 1024
+       help
+         Stack size for thread
+
+config SHELL_BROWSER_THREAD_PRIORITY
+       int "Shell Browser thread priority"
+       depends on SHELL_BROWSER
+       default 5
+       help
+         Set thread priority of the shell browser
+
+config SHELL_BROWSER_MAX_LEN_CMD_PART
+       depends on SHELL_BROWSER
+       int "Maximal Length of command part"
+       default 32

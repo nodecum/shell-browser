@@ -1,0 +1,5 @@
+menu "Libraries"
+
+rsource "shell_browser/Kconfig"
+
+endmenu

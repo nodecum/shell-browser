@@ -1,0 +1,22 @@
+* shell-browser
+This Zephyr module allows the usage of Zephyr shell
+with just some buttons.
+It does it by let you browse through the 
+commands / arguments. The intension is to use it in the
+prototyping pase as a simple user interface for boards which 
+have a small screen and a small number of buttons. 
+
+Instead of filter the shell input and output, which is what this
+module does, implementing it as part of the shell would made it
+more powerful.
+
+** Build & Run
+It is assumed that you have a working Zepyr environment with ZEPHYR_BASE set.
+The code was tested with recent (3.2.99) head of Zephyr.
+You can clone this repository as freestanding aplication
+outside of the zephyr/zephyrproject tree.
+
+: $ cd shell-browser
+: $ west build app -t run
+
+
