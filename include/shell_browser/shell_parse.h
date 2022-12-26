@@ -13,7 +13,7 @@ enum vt_state {
   EscapeUnknown,
   Return,
   Newline,
-  Separator,
+  Separator
 };
 
 enum ct_state {

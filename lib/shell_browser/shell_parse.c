@@ -25,28 +25,25 @@ extern size_t shell_parse( const char* data, size_t length,
     // check the current character
     char c = data[j];
     bool separator = false;
-    if( c == 0x1b) { p->vt = Escape; continue; }
-    if( p->vt == Escape && c == '[') { p->vt = EscapeBracket; continue; }
-    if( p->vt == EscapeBracket ) {
-      p->vt = Unspec;
-      if( c == 'm' ) continue; // MODESOFF 
-      else if( c >= '0' && c <= '9') { p->vt = EscapeNumArg; continue; }
-      else if( c == 'H' ) { 
-        // clear screen, we just declare it as newline 
-        //p->vt = Newline;
-        //p->ct = AltOrOut; 
-        // continue;
-        c = ' ';
-      } else continue;
-    }
-    if( p->vt == EscapeNumArg ) {
-      if( c >= '0' && c <= '9')	continue;
-      if( c == 'C' || c == 'D' ) { // DIRECTION
-	      if( p->ct == AltOrOut || p->ct == Alt)
-	        separator = true;
-      } 
-      else { p->vt = Unspec; continue; }
-    }
+    if( p->ct != Out && p->ct != AltOrOut) {
+      // escape sequences are not parsed in Out mode
+      if( c == 0x1b) { p->vt = Escape; continue; }
+      if( p->vt == Escape && c == '[') { p->vt = EscapeBracket; continue; }
+      if( p->vt == EscapeBracket ) {
+	p->vt = Unspec;
+	if( c == 'm' ) continue; // MODESOFF 
+	else if( c >= '0' && c <= '9') { p->vt = EscapeNumArg; continue; }
+	else continue;
+      }
+      if( p->vt == EscapeNumArg ) {
+	if( c >= '0' && c <= '9')	continue;
+	if( c == 'C' || c == 'D' ) { // DIRECTION
+	  if( p->ct == AltOrOut || p->ct == Alt)
+	    separator = true;
+	} 
+	else { p->vt = Unspec; continue; }
+      }
+    } // end escape handling
     if( c == ' ' && (p->ct == AltOrOut || p->ct == Alt))
       { separator = true; } 
     // mode specific detection
@@ -128,14 +125,14 @@ extern size_t shell_parse( const char* data, size_t length,
     }
     if( p->ct == AltOrOut ) {
       if( separator) {
-	      // we change to alternatives mode
-	      SHELL_PARSE_RESET_ALT( p);
+	// we change to alternatives mode
+	SHELL_PARSE_RESET_ALT( p);
         p->ct = Alt;
         // clear output 
         p->out->size = 0;
       } else {
-	      // new line was not followed by separtor, this means output
-	      p->out->size = 0; p->ct = Out;
+	// new line was not followed by separtor, this means output
+	p->out->size = 0; p->ct = Out;
       }
     }
     // fill the buffers accordingly to their context
